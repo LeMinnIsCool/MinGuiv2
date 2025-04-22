@@ -101,6 +101,14 @@ keySubmit.MouseButton1Click:Connect(function()
     if validKeys[enteredKey] then
         keyStatus.Text = "✅ Key verified successfully!"
         keyStatus.TextColor3 = Color3.fromRGB(100, 255, 100)
+
+        -- Create and play the sound
+        local sound = Instance.new("Sound")
+        sound.SoundId = "rbxassetid://17582213219"
+        sound.Volume = 1
+        sound.Parent = workspace -- or you can use another parent like script.Parent
+        sound:Play()
+
         task.wait(1.5)
         keyVerified = true
         keyScreenGui:Destroy()
@@ -680,7 +688,7 @@ applyCornerRadius(killAuraToggle, 4)
 -- Whitelist Text Box (in player tab, bottom right)
 local whitelistTextBox = Instance.new("TextBox", playerTab)
 whitelistTextBox.Size = UDim2.new(0, 180, 0, 30)
-whitelistTextBox.Position = UDim2.new(1, -50, 1, -210) -- Bottom right (with 10px margin)
+whitelistTextBox.Position = UDim2.new(1, -50, 1, -170) -- Bottom right (with 10px margin)
 whitelistTextBox.AnchorPoint = Vector2.new(1, 1) -- Anchors to bottom right
 whitelistTextBox.Text = "Kill Aura Whitelist"
 whitelistTextBox.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
