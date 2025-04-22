@@ -668,12 +668,26 @@ end)
 -- Kill Aura (Prison Life Only)
 local killAuraActive = false
 local killAuraConnection = nil
+
+-- Kill Aura Toggle (in troll tab)
 local killAuraToggle = Instance.new("TextButton", trollTab)
 killAuraToggle.Size = UDim2.new(0, 200, 0, 30)
 killAuraToggle.Position = UDim2.new(0, 10, 0, 170)
 killAuraToggle.Text = "Kill Aura (Prison Life): OFF"
 killAuraToggle.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 applyCornerRadius(killAuraToggle, 4)
+
+-- Whitelist Text Box (in player tab, bottom right)
+local whitelistTextBox = Instance.new("TextBox", playerTab)
+whitelistTextBox.Size = UDim2.new(0, 180, 0, 30)
+whitelistTextBox.Position = UDim2.new(1, -50, 1, -210) -- Bottom right (with 10px margin)
+whitelistTextBox.AnchorPoint = Vector2.new(1, 1) -- Anchors to bottom right
+whitelistTextBox.Text = "Kill Aura Whitelist"
+whitelistTextBox.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+whitelistTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+whitelistTextBox.PlaceholderText = "Names, comma separated"
+whitelistTextBox.ClearTextOnFocus = false
+applyCornerRadius(whitelistTextBox, 4)
 
 killAuraToggle.MouseButton1Click:Connect(function()
     playButtonSound()
@@ -688,11 +702,27 @@ killAuraToggle.MouseButton1Click:Connect(function()
             while killAuraActive do
                 task.wait(ATTACK_DELAY)
                 
+                -- Get whitelisted names from text box
+                local whitelistedNames = {}
+                for name in string.gmatch(whitelistTextBox.Text, "([^,%s]+)") do
+                    table.insert(whitelistedNames, name:lower())
+                end
+                
                 for _, player in ipairs(Players:GetPlayers()) do
                     if player ~= LocalPlayer and player.Character and killAuraActive then
-                        for _ = 1, 16 do
-                            if not killAuraActive then break end
-                            meleeEvent:FireServer(player)
+                        local isWhitelisted = false
+                        for _, whitelistedName in ipairs(whitelistedNames) do
+                            if player.Name:lower():find(whitelistedName) then
+                                isWhitelisted = true
+                                break
+                            end
+                        end
+                        
+                        if not isWhitelisted then
+                            for _ = 1, 16 do
+                                if not killAuraActive then break end
+                                meleeEvent:FireServer(player)
+                            end
                         end
                     end
                 end
