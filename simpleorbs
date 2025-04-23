@@ -1,0 +1,14 @@
+local orbs = workspace.orbFolder.City:GetChildren()
+local player = game.Players.LocalPlayer
+local char = player.Character or player.CharacterAdded:Wait()
+
+while true do
+orbs = workspace.orbFolder.City:GetChildren()
+    for _, orb in ipairs(orbs) do
+        if orb:FindFirstChild("innerOrb") then
+            char:PivotTo(CFrame.new(orb.innerOrb.Position))
+            task.wait(0.1) 
+        end
+    end
+    task.wait() 
+end
